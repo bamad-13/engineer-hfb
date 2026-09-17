@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التطبيقات | المهندس حمد فرج بوبكر</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-content">
+        <div class="logo-area">
+            <img src="assets/logo.png" alt="Engineer HFB" class="logo-img">
+            <div class="logo-text">
+                <h1>المهندس حمد فرج بوبكر</h1>
+                <span>Engineer HFB</span>
+            </div>
+        </div>
+        
+        <nav class="nav" id="nav">
+            <a href="index.html">🏠 الرئيسية</a>
+            <a href="apps.html" class="active">📱 التطبيقات</a>
+            <a href="gallery.html">🖼️ الصور</a>
+            <a href="articles.html">📝 المقالات</a>
+            <a href="contact.html">✉️ تواصل</a>
+        </nav>
+        
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    </div>
+</header>
+
+<section class="page-hero">
+    <div class="container">
+        <h1>📱 التطبيقات</h1>
+        <p>جميع تطبيقاتي التي طورتها — جاهزة للتحميل المباشر</p>
+    </div>
+</section>
+
+<section class="apps-section">
+    <div class="container">
+        <div id="appsGrid" class="apps-grid">
+            <p class="loading">⏳ جاري التحميل...</p>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container footer-content">
+        <div class="footer-brand">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo">
+            <p>المهندس حمد فرج بوبكر<br><small>Engineer HFB</small></p>
+        </div>
+        
+        <div class="footer-links">
+            <h5>روابط سريعة</h5>
+            <a href="index.html">الرئيسية</a>
+            <a href="apps.html">التطبيقات</a>
+            <a href="gallery.html">الصور</a>
+            <a href="articles.html">المقالات</a>
+        </div>
+        
+        <div class="footer-contact">
+            <h5>تواصل معي</h5>
+            <a href="mailto:hmdalmhmwdy62@gmail.com">📧 hmdalmhmwdy62@gmail.com</a>
+            <a href="tel:+218942935248">📞 +218 94 293 5248</a>
+            <a href="https://wa.me/218942935248" target="_blank">💬 واتساب</a>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p>© 2026 المهندس حمد فرج بوبكر — جميع الحقوق محفوظة</p>
+    </div>
+</footer>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const el = document.getElementById("appsGrid");
+    const data = await apiGet("/v1/apps");
+    
+    if (!data || !data.apps || data.apps.length === 0) {
+        el.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>لا توجد تطبيقات بعد</h3>
+                <p>قريبًا ستجد هنا تطبيقاتي</p>
+            </div>
+        `;
+        return;
+    }
+    
+    el.innerHTML = data.apps.map(appCardHTML).join("");
+});
+</script>
+</body>
+</html>
