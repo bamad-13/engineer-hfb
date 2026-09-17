@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المقالات | المهندس حمد فرج بوبكر</title>
+    <title>قراءة مقال | المهندس حمد فرج بوبكر</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,16 +33,9 @@
     </div>
 </header>
 
-<section class="page-hero">
+<section class="article-full">
     <div class="container">
-        <h1>📝 المقالات</h1>
-        <p>مقالاتي التقنية وتجاربي في عالم البرمجة</p>
-    </div>
-</section>
-
-<section class="articles-section">
-    <div class="container">
-        <div id="articlesList" class="articles-list">
+        <div id="articleContent">
             <p class="loading">⏳ جاري التحميل...</p>
         </div>
     </div>
@@ -76,32 +69,90 @@
 <script src="assets/js/api.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
-    const el = document.getElementById("articlesList");
-    const data = await apiGet("/v1/articles");
+let currentArticleId = null;
+
+function getQueryParam(name) {
+    return new URL(window.location.href).searchParams.get(name);
+}
+
+function renderArticle(a) {
+    const date = new Date(a.time).toLocaleDateString('ar-LY');
     
-    if (!data || !data.articles || data.articles.length === 0) {
-        el.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
-                <h3>لا توجد مقالات بعد</h3>
-                <p>قريبًا ستجد هنا مقالاتي</p>
+    let commentsHTML = "";
+    if (a.comments && a.comments.length > 0) {
+        commentsHTML = a.comments.map(c => `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-name">👤 ${c.userName}</span>
+                    <span class="comment-date">${new Date(c.time).toLocaleString('ar-LY')}</span>
+                </div>
+                <div class="comment-text">${c.text}</div>
             </div>
-        `;
+        `).join("");
+    } else {
+        commentsHTML = '<p style="color:#999;text-align:center;padding:20px">لا توجد تعليقات بعد</p>';
+    }
+    
+    document.getElementById("articleContent").innerHTML = `
+        <h1>${a.title}</h1>
+        <div class="article-full-meta">
+            📅 ${date}
+        </div>
+        
+        <div class="article-full-content">${a.content}</div>
+        
+        <div class="comments-section" style="margin-top:40px">
+            <h3>💬 التعليقات (${a.comments ? a.comments.length : 0})</h3>
+            
+            <div class="comment-form">
+                <input type="text" id="commentName" placeholder="اسمك (اختياري)" value="زائر">
+                <textarea id="commentText" placeholder="اكتب تعليقك..."></textarea>
+                <button onclick="submitComment()">📤 إرسال التعليق</button>
+            </div>
+            
+            <div id="commentsList">${commentsHTML}</div>
+        </div>
+    `;
+}
+
+async function submitComment() {
+    const name = document.getElementById("commentName").value.trim() || "زائر";
+    const text = document.getElementById("commentText").value.trim();
+    
+    if (text.length < 2) {
+        alert("التعليق قصير جدًا");
         return;
     }
     
-    el.innerHTML = data.articles.map(a => {
-        const date = new Date(a.time).toLocaleDateString('ar-LY');
-        return `
-            <div class="article-card" onclick="location.href='article.html?id=${a.id}'">
-                <h4>${a.title}</h4>
-                <p>${(a.excerpt || a.content || '').substring(0, 150)}...</p>
-                <div class="article-meta">📅 ${date}</div>
-            </div>
-        `;
-    }).join("");
+    const result = await apiPost("/v1/articles/" + currentArticleId + "/comment", {
+        text: text,
+        userName: name
+    });
     
+    if (result && result.success) {
+        alert("✅ تم إرسال تعليقك");
+        location.reload();
+    } else {
+        alert("❌ فشل إرسال التعليق");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    currentArticleId = getQueryParam("id");
+    if (!currentArticleId) {
+        document.getElementById("articleContent").innerHTML = 
+            '<p class="loading">❌ المقال غير موجود</p>';
+        return;
+    }
+    
+    const article = await apiGet("/v1/articles/" + currentArticleId);
+    if (!article || article.error) {
+        document.getElementById("articleContent").innerHTML = 
+            '<p class="loading">❌ المقال غير موجود</p>';
+        return;
+    }
+    
+    renderArticle(article);
     trackVisit();
 });
 </script>
