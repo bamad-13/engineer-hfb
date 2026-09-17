@@ -2,12 +2,10 @@
 // Engineer HFB — Main Script
 // ============================================================
 
-// -------------------- قائمة الموبايل --------------------
 function toggleMenu() {
     document.querySelector(".nav").classList.toggle("open");
 }
 
-// -------------------- رسم نجوم التقييم --------------------
 function starsHTML(rating) {
     const full = Math.floor(rating);
     const half = rating - full >= 0.5;
@@ -20,7 +18,6 @@ function starsHTML(rating) {
     return html;
 }
 
-// -------------------- رسم بطاقة تطبيق --------------------
 function appCardHTML(app) {
     return `
         <div class="app-card" onclick="location.href='app.html?id=${app.id}'">
@@ -37,7 +34,6 @@ function appCardHTML(app) {
     `;
 }
 
-// -------------------- رسم بطاقة مقال --------------------
 function articleCardHTML(article) {
     const date = new Date(article.time).toLocaleDateString('ar-LY');
     return `
@@ -49,7 +45,6 @@ function articleCardHTML(article) {
     `;
 }
 
-// -------------------- تحميل آخر التطبيقات --------------------
 async function loadLatestApps() {
     const el = document.getElementById("latestApps");
     if (!el) return;
@@ -63,7 +58,6 @@ async function loadLatestApps() {
     el.innerHTML = data.apps.slice(0, 4).map(appCardHTML).join("");
 }
 
-// -------------------- تحميل آخر المقالات --------------------
 async function loadLatestArticles() {
     const el = document.getElementById("latestArticles");
     if (!el) return;
@@ -77,7 +71,6 @@ async function loadLatestArticles() {
     el.innerHTML = data.articles.slice(0, 3).map(articleCardHTML).join("");
 }
 
-// -------------------- تشغيل عند فتح الصفحة --------------------
 document.addEventListener("DOMContentLoaded", () => {
     trackVisit();
     loadLatestApps();

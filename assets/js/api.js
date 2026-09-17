@@ -30,12 +30,10 @@ async function apiPost(path, body) {
     }
 }
 
-// -------------------- الزوار --------------------
 function trackVisit() {
     fetch(API_BASE + "/v1/visit", { method: "POST" }).catch(() => {});
 }
 
-// -------------------- userId (للتعليقات والتقييم) --------------------
 function getUserId() {
     let id = localStorage.getItem("user_id");
     if (!id) {
