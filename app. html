@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل التطبيق | المهندس حمد فرج بوبكر</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-content">
+        <div class="logo-area">
+            <img src="assets/logo.png" alt="Engineer HFB" class="logo-img">
+            <div class="logo-text">
+                <h1>المهندس حمد فرج بوبكر</h1>
+                <span>Engineer HFB</span>
+            </div>
+        </div>
+        <nav class="nav" id="nav">
+            <a href="index.html">🏠 الرئيسية</a>
+            <a href="apps.html" class="active">📱 التطبيقات</a>
+            <a href="gallery.html">🖼️ الصور</a>
+            <a href="articles.html">📝 المقالات</a>
+            <a href="contact.html">✉️ تواصل</a>
+        </nav>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    </div>
+</header>
+
+<section class="app-detail">
+    <div class="container">
+        <div id="appContent">
+            <p class="loading">⏳ جاري التحميل...</p>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container footer-content">
+        <div class="footer-brand">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo">
+            <p>المهندس حمد فرج بوبكر<br><small>Engineer HFB</small></p>
+        </div>
+        <div class="footer-links">
+            <h5>روابط سريعة</h5>
+            <a href="index.html">الرئيسية</a>
+            <a href="apps.html">التطبيقات</a>
+            <a href="gallery.html">الصور</a>
+            <a href="articles.html">المقالات</a>
+        </div>
+        <div class="footer-contact">
+            <h5>تواصل معي</h5>
+            <a href="mailto:hmdalmhmwdy62@gmail.com">📧 hmdalmhmwdy62@gmail.com</a>
+            <a href="tel:+218942935248">📞 +218 94 293 5248</a>
+            <a href="https://wa.me/218942935248" target="_blank">💬 واتساب</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 المهندس حمد فرج بوبكر — جميع الحقوق محفوظة</p>
+    </div>
+</footer>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+let currentAppId = null;
+let selectedRating = 0;
+
+function getQueryParam(name) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name);
+}
+
+function starsDisplay(rating) {
+    const full = Math.floor(rating);
+    const half = rating - full >= 0.5;
+    let html = "";
+    for (let i = 0; i < 5; i++) {
+        if (i < full) html += "⭐";
+        else if (i === full && half) html += "✨";
+        else html += "☆";
+    }
+    return html;
+}
+
+function renderApp(app) {
+    const date = new Date(app.time).toLocaleDateString('ar-LY');
+    
+    let commentsHTML = "";
+    if (app.comments && app.comments.length > 0) {
+        commentsHTML = app.comments.map(c => `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-name">👤 ${c.userName}</span>
+                    <span class="comment-date">${new Date(c.time).toLocaleString('ar-LY')}</span>
+                </div>
+                <div class="comment-text">${c.text}</div>
+            </div>
+        `).join("");
+    } else {
+        commentsHTML = '<p style="color:#999;text-align:center;padding:20px">لا توجد تعليقات بعد — كن الأول!</p>';
+    }
+    
+    document.getElementById("appContent").innerHTML = `
+        <div class="app-detail-header">
+            <img class="app-detail-icon" src="${app.icon || 'assets/logo.png'}" 
+                 onerror="this.src='assets/logo.png'">
+            <div class="app-detail-info">
+                <h2>${app.name}</h2>
+                <div class="app-detail-meta">
+                    📦 الإصدار ${app.version} • 📅 ${date}
+                </div>
+                <div class="app-rating" style="justify-content:flex-start;font-size:16px">
+                    ${starsDisplay(app.avgRating || 0)}
+                    <span>(${app.avgRating || 0} من 5 — ${app.ratingCount || 0} تقييم)</span>
+                </div>
+            </div>
+            <div class="app-detail-actions">
+                <a class="btn-download" href="${app.apk_url}" target="_blank">
+                    ⬇️ تحميل APK
+                </a>
+            </div>
+        </div>
+        
+        <div class="app-description">
+            <h3 style="color:#C9A85F;margin-bottom:12px">📝 الوصف</h3>
+            <p>${app.description || 'لا يوجد وصف'}</p>
+        </div>
+        
+        <div class="rating-box">
+            <h3>⭐ قيّم هذا التطبيق</h3>
+            <div class="rating-avg">${app.avgRating || 0} / 5</div>
+            <div class="stars-input" id="starsInput">
+                <span onclick="selectRating(1)">☆</span>
+                <span onclick="selectRating(2)">☆</span>
+                <span onclick="selectRating(3)">☆</span>
+                <span onclick="selectRating(4)">☆</span>
+                <span onclick="selectRating(5)">☆</span>
+            </div>
+            <button class="btn btn-primary" onclick="submitRating()" style="margin-top:16px">
+                💾 إرسال التقييم
+            </button>
+        </div>
+        
+        <div class="comments-section">
+            <h3>💬 التعليقات (${app.comments ? app.comments.length : 0})</h3>
+            
+            <div class="comment-form">
+                <input type="text" id="commentName" placeholder="اسمك (اختياري)" value="زائر">
+                <textarea id="commentText" placeholder="اكتب تعليقك هنا..."></textarea>
+                <button onclick="submitComment()">📤 إرسال التعليق</button>
+            </div>
+            
+            <div id="commentsList">
+                ${commentsHTML}
+            </div>
+        </div>
+    `;
+}
+
+function selectRating(n) {
+    selectedRating = n;
+    const stars = document.querySelectorAll("#starsInput span");
+    stars.forEach((s, i) => {
+        s.textContent = i < n ? "⭐" : "☆";
+    });
+}
+
+async function submitRating() {
+    if (selectedRating === 0) {
+        alert("الرجاء اختيار تقييم من 1 إلى 5");
+        return;
+    }
+    
+    const userId = getUserId();
+    const result = await apiPost("/v1/apps/" + currentAppId + "/rate", {
+        value: selectedRating,
+        userId: userId
+    });
+    
+    if (result && result.success) {
+        alert("✅ تم إرسال تقييمك، شكرًا!");
+        location.reload();
+    } else {
+        alert("❌ فشل إرسال التقييم");
+    }
+}
+
+async function submitComment() {
+    const name = document.getElementById("commentName").value.trim() || "زائر";
+    const text = document.getElementById("commentText").value.trim();
+    
+    if (text.length < 2) {
+        alert("التعليق قصير جدًا");
+        return;
+    }
+    
+    const result = await apiPost("/v1/apps/" + currentAppId + "/comment", {
+        text: text,
+        userName: name
+    });
+    
+    if (result && result.success) {
+        alert("✅ تم إرسال تعليقك");
+        location.reload();
+    } else {
+        alert("❌ فشل إرسال التعليق");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    currentAppId = getQueryParam("id");
+    if (!currentAppId) {
+        document.getElementById("appContent").innerHTML = 
+            '<p class="loading">❌ التطبيق غير موجود</p>';
+        return;
+    }
+    
+    const app = await apiGet("/v1/apps/" + currentAppId);
+    if (!app || app.error) {
+        document.getElementById("appContent").innerHTML = 
+            '<p class="loading">❌ التطبيق غير موجود</p>';
+        return;
+    }
+    
+    renderApp(app);
+    trackVisit();
+});
+</script>
+</body>
+</html>
