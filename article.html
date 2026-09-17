@@ -90,14 +90,14 @@ function renderArticle(a) {
             </div>
         `).join("");
     } else {
-        commentsHTML = '<p style="color:#999;text-align:center;padding:20px">لا توجد تعليقات بعد</p>';
+        commentsHTML = '<p style="color:#999;text-align:center;padding:20px">لا توجد تعليقات بعد — كن الأول!</p>';
     }
     
     document.getElementById("articleContent").innerHTML = `
+        <a href="articles.html" style="color:#C9A85F;font-size:14px;display:inline-block;margin-bottom:20px">← العودة للمقالات</a>
+        
         <h1>${a.title}</h1>
-        <div class="article-full-meta">
-            📅 ${date}
-        </div>
+        <div class="article-full-meta">📅 ${date}</div>
         
         <div class="article-full-content">${a.content}</div>
         
@@ -106,7 +106,7 @@ function renderArticle(a) {
             
             <div class="comment-form">
                 <input type="text" id="commentName" placeholder="اسمك (اختياري)" value="زائر">
-                <textarea id="commentText" placeholder="اكتب تعليقك..."></textarea>
+                <textarea id="commentText" placeholder="اكتب تعليقك هنا..."></textarea>
                 <button onclick="submitComment()">📤 إرسال التعليق</button>
             </div>
             
@@ -120,7 +120,7 @@ async function submitComment() {
     const text = document.getElementById("commentText").value.trim();
     
     if (text.length < 2) {
-        alert("التعليق قصير جدًا");
+        alert("❌ التعليق قصير جدًا");
         return;
     }
     
@@ -157,4 +157,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 </script>
 </body>
-      </html>
+</html>
