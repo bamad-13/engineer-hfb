@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قراءة مقال | المهندس حمد فرج بوبكر</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-content">
+        <div class="logo-area">
+            <img src="assets/logo.png" alt="Engineer HFB" class="logo-img">
+            <div class="logo-text">
+                <h1>المهندس حمد فرج بوبكر</h1>
+                <span>Engineer HFB</span>
+            </div>
+        </div>
+        <nav class="nav" id="nav">
+            <a href="index.html">🏠 الرئيسية</a>
+            <a href="apps.html">📱 التطبيقات</a>
+            <a href="gallery.html">🖼️ الصور</a>
+            <a href="articles.html" class="active">📝 المقالات</a>
+            <a href="contact.html">✉️ تواصل</a>
+        </nav>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    </div>
+</header>
+
+<section class="article-full">
+    <div class="container">
+        <div id="articleContent">
+            <p class="loading">⏳ جاري التحميل...</p>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container footer-content">
+        <div class="footer-brand">
+            <img src="assets/logo.png" alt="Logo" class="footer-logo">
+            <p>المهندس حمد فرج بوبكر<br><small>Engineer HFB</small></p>
+        </div>
+        <div class="footer-links">
+            <h5>روابط سريعة</h5>
+            <a href="index.html">الرئيسية</a>
+            <a href="apps.html">التطبيقات</a>
+            <a href="gallery.html">الصور</a>
+            <a href="articles.html">المقالات</a>
+        </div>
+        <div class="footer-contact">
+            <h5>تواصل معي</h5>
+            <a href="mailto:hmdalmhmwdy62@gmail.com">📧 hmdalmhmwdy62@gmail.com</a>
+            <a href="tel:+218942935248">📞 +218 94 293 5248</a>
+            <a href="https://wa.me/218942935248" target="_blank">💬 واتساب</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 المهندس حمد فرج بوبكر — جميع الحقوق محفوظة</p>
+    </div>
+</footer>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+let currentArticleId = null;
+
+function getQueryParam(name) {
+    return new URL(window.location.href).searchParams.get(name);
+}
+
+function renderArticle(a) {
+    const date = new Date(a.time).toLocaleDateString('ar-LY');
+    
+    let commentsHTML = "";
+    if (a.comments && a.comments.length > 0) {
+        commentsHTML = a.comments.map(c => `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-name">👤 ${c.userName}</span>
+                    <span class="comment-date">${new Date(c.time).toLocaleString('ar-LY')}</span>
+                </div>
+                <div class="comment-text">${c.text}</div>
+            </div>
+        `).join("");
+    } else {
+        commentsHTML = '<p style="color:#999;text-align:center;padding:20px">لا توجد تعليقات بعد — كن الأول!</p>';
+    }
+    
+    document.getElementById("articleContent").innerHTML = `
+        <a href="articles.html" style="color:#C9A85F;font-size:14px;display:inline-block;margin-bottom:20px">← العودة للمقالات</a>
+        
+        <h1>${a.title}</h1>
+        <div class="article-full-meta">📅 ${date}</div>
+        
+        <div class="article-full-content">${a.content}</div>
+        
+        <div class="comments-section" style="margin-top:40px">
+            <h3>💬 التعليقات (${a.comments ? a.comments.length : 0})</h3>
+            
+            <div class="comment-form">
+                <input type="text" id="commentName" placeholder="اسمك (اختياري)" value="زائر">
+                <textarea id="commentText" placeholder="اكتب تعليقك هنا..."></textarea>
+                <button onclick="submitComment()">📤 إرسال التعليق</button>
+            </div>
+            
+            <div id="commentsList">${commentsHTML}</div>
+        </div>
+    `;
+}
+
+async function submitComment() {
+    const name = document.getElementById("commentName").value.trim() || "زائر";
+    const text = document.getElementById("commentText").value.trim();
+    
+    if (text.length < 2) {
+        alert("❌ التعليق قصير جدًا");
+        return;
+    }
+    
+    const result = await apiPost("/v1/articles/" + currentArticleId + "/comment", {
+        text: text,
+        userName: name
+    });
+    
+    if (result && result.success) {
+        alert("✅ تم إرسال تعليقك");
+        location.reload();
+    } else {
+        alert("❌ فشل إرسال التعليق");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    currentArticleId = getQueryParam("id");
+    if (!currentArticleId) {
+        document.getElementById("articleContent").innerHTML = 
+            '<p class="loading">❌ المقال غير موجود</p>';
+        return;
+    }
+    
+    const article = await apiGet("/v1/articles/" + currentArticleId);
+    if (!article || article.error) {
+        document.getElementById("articleContent").innerHTML = 
+            '<p class="loading">❌ المقال غير موجود</p>';
+        return;
+    }
+    
+    renderArticle(article);
+    trackVisit();
+});
+</script>
+</body>
+</html>
