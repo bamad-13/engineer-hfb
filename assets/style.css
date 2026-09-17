@@ -1,1 +1,551 @@
+/* ============================================================
+   Engineer HFB — Style Sheet
+   ============================================================ */
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --gold: #C9A85F;
+    --gold-light: #E5C989;
+    --gold-dark: #8B7340;
+    --bg: #0A0A0A;
+    --bg-alt: #111111;
+    --bg-card: #1A1A1A;
+    --text: #FFFFFF;
+    --text-muted: #999999;
+    --border: #2A2A2A;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.logo-text h1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.2;
+}
+
+.logo-text span {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+}
+
+.nav {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.nav a {
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: color 0.3s;
+    position: relative;
+    padding: 4px 0;
+}
+
+.nav a:hover,
+.nav a.active {
+    color: var(--gold);
+}
+
+.nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* ==================== HERO ==================== */
+.hero {
+    position: relative;
+    padding: 80px 20px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(201, 168, 95, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-logo-wrap {
+    display: inline-block;
+    padding: 20px;
+    margin-bottom: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 168, 95, 0.2) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.hero-logo {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 30px rgba(201, 168, 95, 0.5));
+}
+
+.hero-title {
+    font-size: 42px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    color: var(--gold);
+    opacity: 0.8;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.hero-desc {
+    max-width: 600px;
+    margin: 0 auto 32px;
+    color: var(--text-muted);
+    font-size: 16px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    font-family: inherit;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    color: var(--bg);
+    box-shadow: 0 4px 20px rgba(201, 168, 95, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(201, 168, 95, 0.5);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+}
+
+.btn-secondary:hover {
+    background: var(--gold);
+    color: var(--bg);
+}
+
+/* ==================== SECTIONS ==================== */
+section {
+    padding: 60px 0;
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 32px;
+    text-align: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+    margin: 12px auto 0;
+    border-radius: 2px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.section-header .section-title {
+    margin: 0;
+    text-align: right;
+}
+
+.section-header .section-title::after {
+    margin: 12px 0 0;
+}
+
+.see-all {
+    color: var(--gold);
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+.see-all:hover {
+    opacity: 0.7;
+}
+
+/* ==================== FEATURES ==================== */
+.features {
+    background: var(--bg-alt);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 20px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(201, 168, 95, 0.15);
+}
+
+.feature-icon {
+    font-size: 42px;
+    margin-bottom: 16px;
+}
+
+.feature-card h4 {
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 8px;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* ==================== APPS GRID ==================== */
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.app-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(201, 168, 95, 0.15);
+}
+
+.app-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    object-fit: cover;
+    margin: 0 auto 16px;
+    background: var(--bg-alt);
+    display: block;
+}
+
+.app-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.app-version {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.app-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--gold);
+}
+
+.app-desc {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+    margin-top: 12px;
+    height: 40px;
+    overflow: hidden;
+}
+
+/* ==================== ARTICLES LIST ==================== */
+.articles-list {
+    display: grid;
+    gap: 16px;
+}
+
+.article-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.article-card:hover {
+    border-color: var(--gold);
+    transform: translateX(-5px);
+}
+
+.article-card h4 {
+    color: var(--gold);
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.article-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.article-meta {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.loading {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 40px;
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    padding: 40px 0 0;
+    margin-top: 40px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    padding-bottom: 30px;
+}
+
+.footer-brand {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.footer-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.footer-brand p {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.footer-brand small {
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 2px;
+    font-size: 10px;
+}
+
+.footer-links h5,
+.footer-contact h5 {
+    color: var(--gold);
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.footer-links a,
+.footer-contact a {
+    display: block;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover,
+.footer-contact a:hover {
+    color: var(--gold);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .nav {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        background: var(--bg);
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+        border-bottom: 1px solid var(--border);
+        display: none;
+    }
+    
+    .nav.open {
+        display: flex;
+    }
+    
+    .hero-title {
+        font-size: 30px;
+    }
+    
+    .hero-logo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .logo-text h1 {
+        font-size: 13px;
+    }
+    
+    .logo-text span {
+        font-size: 10px;
+    }
+}
